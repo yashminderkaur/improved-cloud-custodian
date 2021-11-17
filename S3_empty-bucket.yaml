@@ -1,0 +1,15 @@
+# First Policy 
+policies:
+  - name: s3-empty-bucket
+    resource: s3
+    filters:
+      - type: metrics
+        name: NumberOfObjects
+        value: 10
+        op: lt
+    actions:
+      - type: delete
+      
+
+
+

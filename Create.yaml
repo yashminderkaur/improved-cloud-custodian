@@ -1,0 +1,57 @@
+---
+policies:
+  - name: s3-set-bucket-encryption
+    resource: s3
+    mode: 
+      type: cloudtrail
+      role: arn:aws:iam::281786681683:role/encryptS3
+      events:
+        - CreateBucket   
+    filters:
+     - type: bucket-encryption
+       crypto: AES256 
+       state: false
+    actions:
+      - type: set-bucket-encryption
+        enabled: true
+      
+
+# To create tags for ec2 instances
+
+#---
+#policies:
+#  - name: set-running-tag-ec2
+#    resource: ec2
+#    description: |
+#      to attach tag of the current state to the instance
+#    filters:
+#      - "tag.running": present
+#    actions: 
+#      - type: delete
+#        enabled: true
+#  
+#policies:
+#
+#  - name: purge-lambda-after-7-days
+#
+#    resource: lambda
+#
+#    filters:
+#
+#    - type: value
+#
+#      value: ec2
+#
+#      key: FunctionName
+#
+#      value_type: normalize
+#
+#     op: not_in
+#
+#Example resources.json file;
+#
+#[
+#
+#  {
+#
+#    "FunctionName": "EC2_Instance_Check",

@@ -1,0 +1,24 @@
+policies:
+    - name: password-policy-check
+      resource: account
+      
+      filters:
+        - type: password-policy
+          key: MinimumPasswordLength
+          value: 10
+          op: ge
+        - type: password-policy
+          key: RequireSymbols
+          value: true
+    - name: check-securityhub-status
+      resource: aws.account
+      filters:
+        - type: securityhub
+          enabled: true
+    - name: root-keys-or-no-mfa
+      resource: account
+      filters:
+        - type: iam-summary
+          key: AccountMFAEnabled
+          value: true
+          op: eq 

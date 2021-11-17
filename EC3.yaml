@@ -1,0 +1,11 @@
+# Third policy
+
+policies:
+  - name: ec2_instance
+    resource: ec2
+    comment: |
+      To stop all Ec2 running instance with no logging.
+    filters:
+      - logging: true
+    actions:
+      - notify

@@ -1,0 +1,11 @@
+policies:
+
+- name: rds-unused-databases-notify-step1
+  resource: rds
+  filters:
+    - "tag:c7n_rds_unused": absent  
+  actions:
+    - type: mark-for-op
+      tag: c7n_rds_unused
+      op: delete
+      days: 14

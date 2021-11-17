@@ -1,0 +1,57 @@
+# policy to check mailer
+#
+#---
+#policies:
+#  - name: c7n-mailer-test
+#    resource: sqs
+#    mode:
+#      role: arn:aws:iam:eu-west-1:281786681683:role/Cutsodian-Mailer
+#    filters: 
+#      - "tag:MailerTest": absent
+#    actions: 
+#      - type: notify
+#        template: defalut 
+#        priority_header: '2'
+#        subject: testing the c7n mailer
+#        to:
+#           - yashminder@xenonstack.com
+#        transport:
+#           type: sqs
+#           queue: https://sqs.eu-west-1.amazonaws.com/281786681683/awsqueue
+
+---
+policies:
+  - name: c7n-mailer-test
+    resource: sqs
+    filters: 
+      - "tag.Name": absent
+    actions:
+      - type: notify
+        template: defalut 
+        priority_header: '2'
+        subject: testing the c7n mailer
+        to:
+           - yashminder1999kaur@gmail.com
+        transport:
+           type: sqs
+           queue: https://sqs.eu-west-1.amazonaws.com/281786681683/myawsqueue
+
+
+#---
+#policies:
+#  - name: mailer-test
+#    resource: sqs
+#    filters:
+#     - "tag:MailerTest": absent
+#    actions:
+#      - type: notify
+#        template: default
+#        subject: fix your tags
+#        to:
+#          - yashminder1999kaur@gmail.com
+#        transport:
+#          type: sqs
+#          queue: https://sqs.eu-west-1.amazonaws.com/281786681683/awsqueue
+
+
+#amazonsessendingaccess

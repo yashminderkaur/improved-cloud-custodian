@@ -1,0 +1,125 @@
+# To check if S3 bucket is without encyrption delete that bucket.
+
+---
+policies:
+  - name: s3-set-bucket-encryption
+    resource: s3
+    filters:
+     - type: bucket-encryption
+       crypto: AES256 
+       state: false
+        
+    actions:
+      - type: delete
+
+
+#This policy will first filter the unencrypted buckets and than set encryption on the bucket
+---
+policies:
+  - name: s3-set-bucket-encryption
+    resource: s3
+    filters:
+     - type: bucket-encryption
+       crypto: AES256 
+       state: false
+    actions:
+      - type: set-bucket-encryption
+        enabled: true
+
+
+# Third policy
+
+---
+policies:
+
+   - name: s3-configure-standards-real-time
+     resource: s3
+     description: |
+       This policy is triggered when a new S3 bucket is created and it applies
+       the AWS AES256 Default Bucket Encryption, Tags the creators ID, enables
+       object versioning, configures the bucket lifecycle and enables logging.
+     
+     filters: 
+     
+     actions:
+       - type: set-bucket-encryption
+         enabled: true
+       - type: toggle-versioning
+         enabled: true
+
+#Third policy  
+
+---
+policies:
+   - name: terminate-unencrypted-ebs
+     description: |
+       Terminate all unencrypted EBS volumes upon creation
+     resource: ebs
+     mode:
+       type: cloudtrail
+       events:
+         - CreateTags
+       role: arn:aws:iam::281786681683:role/aws-service-role/elasticbeanstalk.amazonaws.com/AWSServiceRoleForElasticBeanstalk
+     filters:
+       - "tag.Encryption": True
+     actions:
+       - type: delete   
+ 
+# policy for auto tagging
+
+policies:
+- name: ec2-auto-tag-user
+  resource: ec2
+  mode:
+    type: cloudtrail
+    role: arn:aws:iam::281786681683:role/custodian_auto_tagger
+    # note {account_id} is optional. If you put that there instead of
+    # your actual account number, when the policy is provisioned it
+    # will automatically inherit the account_id properly
+    events:
+      - RunInstances
+  filters:
+    - tag:CreatorName: absent
+  actions:
+    - type: auto-tag-user
+      tag: CreatorName
+      principal_id_tag: CreatorId
+
+
+policies:
+- name: ec2-auto-tag-user
+  resource: ec2
+  mode:
+    type: cloudtrail
+    role: arn:aws:iam::281786681683:role/CloudCustodian
+    # note {account_id} is optional. If you put that there instead of
+    # your actual account number, when the policy is provisioned it
+    # will automatically inherit the account_id properly
+    events:
+      - RunInstances
+  filters:
+    - tag:CreatorName: absent
+  actions:
+    - type: auto-tag-user
+      tag: CreatorName
+      principal_id_tag: CreatorId
+
+
+---
+policies:
+  - name: s3-global-access-remove
+     description: |
+       Policy Engine Removes Global Access from S3 buckets
+     comment: |
+       Check S3 buckets in a region for any global grants
+       (AllUsers and AuthenticatedUsers) in their ACL and remove them if they
+       exist.
+
+     resource: s3
+     mode:
+       type: cloudtrail
+       role: arn:aws:iam::*******:role/ROLENAME
+       events:
+         - event: CreateBucket
+           ids: requestParameters.bucketName
+           source: s3.amazonaws.com

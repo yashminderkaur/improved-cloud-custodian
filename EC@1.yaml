@@ -1,0 +1,6 @@
+policies:
+  - name: ami-unused
+    resource: ami
+    filters:
+      - type: unused
+        value: true

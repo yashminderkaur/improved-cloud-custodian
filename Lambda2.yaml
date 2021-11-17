@@ -1,0 +1,28 @@
+policies:
+- name: sg-add-permission
+  resource: security-group
+  description: |
+    Filter any security group that
+    allows 0.0.0.0/0 or ::/0 (IPv6) ingress on port 22, remove
+    the rule
+  mode:
+    type: cloudtrail
+    role: arn:aws:iam::281786681683:role/Custodian-ec2-testing
+    events:
+      - source: ec2.amazonaws.com
+        event: AuthorizeSecurityGroupIngress
+        ids: "requestParameters.groupId"
+      - source: ec2.amazonaws.com
+        event: RevokeSecurityGroupIngress
+        ids: "requestParameters.groupId"
+  filters:
+    - or:
+      - type: ingress
+        Ports: [22]
+        Cidr: "0.0.0.0/0"
+      - type: ingress
+        Ports: [22]
+        CidrV6: "::/0"
+  actions:
+    - delete
+    

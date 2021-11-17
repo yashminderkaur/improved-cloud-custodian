@@ -1,0 +1,31 @@
+# fourth policy 
+# buckets with no logging.
+---
+
+policies:
+  - name: encrypt-s3-bucket
+    resource: aws.s3
+    mode:
+      type: cloudtrail
+      role: arn:aws:iam::281786681683:role/encryptS3
+      events:
+        - event: CreateBucket
+          ids: requestParameters.bucketName
+          source: s3.amazonaws.com
+    filters:
+     - type: bucket-encryption
+       crypto: AES256 
+       state: false
+    actions:
+     - type: set-bucket-encryption
+       enabled: true
+     - type: toggle-versioning
+       enabled: true
+#     - type: notify
+#       template: default
+#       subject: 'These resources will be deleted in 4 days unless you add a KeepAlive tag'
+#       to:
+#        - yashminder@xenonstack.com
+#       transport:
+#         type: sqs
+#         queue: https://sqs.eu-west-1.amazonaws.com/281786681683/myawsqueue

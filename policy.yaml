@@ -1,0 +1,29 @@
+# Custodian policy to attach custodian Tag
+---
+policies:
+  - name: s3-set-bucket-encryption
+    resource: s3  
+    filters:
+     - type: bucket-encryption
+       crypto: AES256 
+       state: false
+    actions:
+      - type: set-bucket-encryption
+        enabled: true
+      - type: notify
+      template: c7n.html
+      priority_header: '1'
+      subject: "Resource: Security Group Ingress | Account: {{ account }} | Region: {{ region }}"
+      action_desc: "ACTIONS: Notification."
+      violation_desc: "VIOLATION: Security Group allows 0.0.0.0/0 ingress"
+      to:
+        - myemailaddress
+      transport:
+        type: sqs
+        queue: https://sqs.us-west-2.amazonaws.com/1234567890/Violated-SG
+        region: us-west-2    
+
+
+
+# custodian policy to attach tag
+

@@ -1,0 +1,13 @@
+# Fourth policy 
+# Check that every VPC is connected with a NAT gateway. 
+--- 
+policies: 
+  - name: vpc-with-nat-gateway
+    resource: vpc
+    comment: | 
+      This policy will check whether the vpc is connected with a route table or not
+    filters: 
+      - "tag:Name": present
+    actions:
+      - notify
+    

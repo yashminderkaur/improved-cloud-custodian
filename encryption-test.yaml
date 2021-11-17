@@ -1,0 +1,16 @@
+---
+policies:
+   - name: terminate-unencrypted-ebs
+     description: |
+       Terminate all unencrypted EBS volumes upon creation
+     resource: ebs
+     mode:
+       type: cloudtrail
+       events:
+         - event: CreateVolume
+       role: arn:aws:iam::281786681683:role/aws-service-role/elasticbeanstalk.amazonaws.com/AWSServiceRoleForElasticBeanstalk
+     filters:
+       - "tag.Encryption": True
+     actions:
+       - type: delete   
+ 

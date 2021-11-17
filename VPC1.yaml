@@ -1,0 +1,69 @@
+## VPC first Policy 
+#---
+#  policies:
+#    name: vpc_policy
+#    resource: vpc 
+#    comment: |
+#      If not encrypted than stop
+#    filters:
+#      - type: encryption
+#        value: false
+#    action:
+#      - type: notify
+#
+#
+## VPC second policy
+## check for logging
+#
+#---
+#  policies:
+#    name: vpc_policy
+#    resource: vpc 
+#    comment: |
+#      check RDS for logging
+#    filters:
+#      - not: 
+#            - type: flow-logs
+#              enabled: false
+#              status: active 
+#              actions:
+#                - type: notify
+#                  template: default.html
+#
+## VPC third policy 
+## check that every VPC has a internetgateway 
+#
+#--- 
+#policies:
+#  - name: vpc-with-ing
+#    resource: vpc
+#    comment: | 
+#      This polciy checks whether the vpc is connected with an internet gateway or not 
+#    filters: 
+#      - type: internet-gateway
+#        key: 
+#        value: 
+#    actions: 
+#      - notify
+
+
+# Fourth policy 
+# Check that every VPC is connected with a NAT gateway. 
+--- 
+policies: 
+  - name: vpc-with-nat-gateway
+    resource: vpc
+    comment: | 
+      This policy will check whether the vpc is connected with a route table or not
+    filters: 
+      - "tag:Name": absent
+    actions:
+      - type: tag
+        tag: NonCompliantResource
+        value: remediated
+    
+
+
+                  
+        
+        

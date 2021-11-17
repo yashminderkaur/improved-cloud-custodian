@@ -1,0 +1,21 @@
+# S3 policy 
+# S3 with logging enabled
+
+--- 
+policies:
+  - name: s3-logging
+    resource: s3
+    description: |
+      this will check whether s3 has logging enabled or not
+    filters:
+      - type: bucket-logging
+        op: disabled
+    actions:
+      - type: toggle-versioning
+        enabled: true
+
+
+ 
+      
+
+

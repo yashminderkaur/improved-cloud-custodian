@@ -1,0 +1,5 @@
+policies:
+  - name: ec2-onhours
+    resource: ec2
+    description: |
+        ec2 will start after 

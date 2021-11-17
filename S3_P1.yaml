@@ -1,0 +1,70 @@
+# First Policy 
+
+---
+policies:
+  - name: delete-empty-s3-bucket
+    resource: s3
+    comment: |
+      This policy will delete any empty S3 bucket 
+
+    filter:
+      - type: metrics
+        key: numberofobjects
+        value: 0
+        op: eq
+    actions:
+      - type: notify
+        template: default.html
+        priority_header: 1
+        subject: " Bucket with no object"
+
+# second Policy 
+# unencyrpted BUckets 
+
+--- 
+policies: 
+  actions: 
+    - stop
+  comment: "list all the unencrypted s3 buckets \n"
+  filters: 
+    - 
+      key: ~
+      type: encryption
+      value: false
+  name: unencrypted_S3
+  resource: s3
+
+
+# Third policy 
+# encrypt S3 bucket
+
+---
+
+policies:
+  - name: encrypt_s3_bucket
+    resource: s3
+condition:
+    type: value
+    value: region
+    key: 'eu-west-1'
+    actions:
+      - type: set-bucket-encyrption 
+        crypto: AES256
+        enable: True
+
+    
+
+# fourth policy 
+# buckets with no logging.
+
+---
+policies:
+  - name: s3-logging
+    resource: s3
+   
+    filters: 
+      - type: bucket-logging
+        op: disabled
+    actions:
+      - type: notify
+ 

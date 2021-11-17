@@ -1,0 +1,18 @@
+# Fifth policy 
+# To detect any stopped EC2 instance
+
+policies:
+
+  - name: ec2-mark-stopped-instance
+    resource: ec2
+    description: |
+      Mark any stopped ec2 instance for deletion in 60 days
+      If an instance has not been started for 60 days or over
+      then they will be deleted similar to internal policies as it wont be patched.
+    filters:  
+      - "State.Name": stopped
+    actions:
+      - type: mark-for-op
+        tag: c7n_stopped_instance
+        op: terminate
+        days: 60

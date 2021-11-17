@@ -1,0 +1,27 @@
+# VPC second policy
+# check for logging
+
+#---
+#  policies:
+#   - name: vpc_policy
+#     resource: vpc 
+#     comment: |
+#       check vpc for logging
+#     filters:
+#      - type: flow-logs
+#        enabled: false
+#        status: active 
+#     actions:
+#       - notify
+                   
+
+policies:
+  - name: vpc-enable-flow-logs
+    resource: vpc
+    filters:
+      - type: flow-logs
+        enabled: false
+    actions:
+      - type: set-flow-log
+        DeliverLogsPermissionArn: arn:iam:role
+        LogGroupName: /custodian/vpc/flowlogs/

@@ -1,0 +1,11 @@
+policies:
+  - name: set-default-ebs-encryption
+    resource: aws.account
+    filters:
+     - type: default-ebs-encryption
+       state: false
+    actions:
+     - type: set-ebs-encryption
+       state: true
+       key: alias/aws/ebs
+

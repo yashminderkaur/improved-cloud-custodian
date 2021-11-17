@@ -1,0 +1,21 @@
+### EC2 Related ###
+policies:
+  - name: open-world-admin-port-securitygroups
+    resource: aws.security-group
+    description: Removes 0.0.0.0/0 and ::/0 as sources ingress for security groups
+    filters:
+    - or:
+      - type: ingress
+        Ports: [22 ]
+        Cidr:
+          value: "0.0.0.0/0"
+      - type: ingress
+        Ports: [22 ]
+        CidrV6:
+          value: "::/0"
+    actions:
+      - type: remove-permissions
+        ingress: matched
+      - type: tag
+        tag: NonCompliantResource
+        value: remediated

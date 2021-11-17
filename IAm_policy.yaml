@@ -1,0 +1,110 @@
+---
+  policies:
+    - name: IAM_key_mangement
+      resource: iam-role
+      commment: |
+        To implement key rotation
+      filters: 
+        - type : 
+      actions: 
+        - type: notify
+          template: default.html
+          priority_header: 1
+          subject: "IAM key rotation"
+
+
+# second policy 
+# users with old access keys should renew the access keys.  
+
+---
+  policies:
+    - name: inactive-users-with-accesskeys
+      resource: iam_users
+      comment: |
+        to check users with access keys 
+      filters:
+        - type: access-keys
+          key: CreateDate
+          value_type: age
+          value: 90
+      actions:
+        - type: notify
+          template: default.html
+          priority_header: 1
+          subject: " Access keys"
+        
+
+
+
+# Third policy 
+# list of users with MFA 
+--- 
+policies:
+  - name: mfa-information
+    resource: iam-user
+    filters:
+      - type: credential
+        key: mfa_active
+        value: true
+
+
+## fourth policy--- 
+condition: 
+  actions: 
+    - 
+      crypto: AES256
+      enable: true
+      type: set-bucket-encyrption
+  key: eu-west-1
+  type: value
+  value: region
+  policies: 
+  - 
+    name: encrypt_s3_bucket
+    resource: s3
+    resource: iam_users
+    comment: |
+      This policy shows all the users with admin-access.
+    filters:
+      - type: policy
+        key: Policyname
+        value: AdministratorAccess
+    actions:
+      - type: notify
+        template: default.html
+        priority_header: 1
+        subject: ""
+      
+    
+## Role-based Policy
+
+---
+policies:
+  - name: role-attached-policy
+    resource: iam-role
+    comment: |
+      Check that every role is attached with a policy.
+    filters:
+      - type: policy
+        key: Policyname
+        value: true
+
+# Users associated with group
+
+--- 
+policies:
+  - name: user-with-group
+    resource: iam-role
+    comment: |
+      to list users associated with a group
+    filters:
+      - type: group
+        key: Groupname 
+      
+
+
+
+
+
+      
+

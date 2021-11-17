@@ -1,0 +1,10 @@
+policies:
+  - name: encrypted-ebs-volumes-snapshot
+    resource: ebs
+    filters:
+      - type: encrypted
+        
+    actions:
+      - type: snapshot
+        tags:
+            custodian_snapshot: True

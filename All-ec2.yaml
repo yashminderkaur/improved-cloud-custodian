@@ -1,0 +1,71 @@
+policies:
+  - name: ec2_instance
+    resource: ec2
+    comment: |
+      To stop all Ec2 running instance with no logging.
+    filters:
+      - logging: true
+    actions:
+      - notify
+
+
+  - name: ec2-mark-stopped-instance
+    resource: ec2
+    description: |
+      Mark any stopped ec2 instance for deletion in 60 days
+      If an instance has not been started for 60 days or over
+      then they will be deleted similar to internal policies as it wont be patched.
+    filters:  
+      - "State.Name": stopped
+    actions:
+      - type: mark-for-op
+        tag: c7n_stopped_instance
+        op: terminate
+        days: 60
+  - name: open-world-admin-port-securitygroups
+    resource: aws.security-group
+    description: Removes 0.0.0.0/0 and ::/0 as sources ingress for security groups
+    filters:
+    - or:
+      - type: ingress
+        Ports: [22 ]
+        Cidr:
+          value: "0.0.0.0/0"
+      - type: ingress
+        Ports: [22 ]
+        CidrV6:
+          value: "::/0"
+    actions:
+      - type: remove-permissions
+        ingress: matched
+      - type: tag
+        tag: NonCompliantResource
+        value: remediated
+  - name: stopped-ec2-instance
+    resource: ec2
+    description: |
+      This policy will list any stopped ec2 instance
+    filters: 
+      - "State.Name": stopped  
+    actions:
+      - start
+  
+  - name: terminated-ec2-instance
+    resource: ec2
+    description: |
+      This part will tell about all the terminated instance.
+    filters: 
+      - "State.Name": terminated
+    actions:
+      - notify
+
+  - name: running-ec2-instance
+    resource: ec2
+    description: |
+      this part will tell about all the running instance.
+    filters:
+      - "State.Name": running
+    actions:
+      - type: mark-for-op
+        op: stop
+        days: 1

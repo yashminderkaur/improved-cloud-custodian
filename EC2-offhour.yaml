@@ -1,0 +1,17 @@
+policies: 
+  - name: ec2-offhours
+    resource: ec2
+    description: |
+        All the ec2 instances with tag custodian testingwill be stopped at offhours.
+    mode: 
+      type: periodic
+      role:
+      schedule: "rate(1 minute)"
+    filters:
+      - type: offhour
+        default_tz: est
+        offhour: 1
+      - "tag.custodian-testing": present
+    actions:
+      - stop
+      

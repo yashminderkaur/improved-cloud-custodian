@@ -1,0 +1,146 @@
+#---
+#policies:
+#  - name: ec2_instance
+#    resource: ec2
+#    region: eu-west-1
+#    description: |
+#      To stop all the ec2 instances not in eu-west-1, eu-west-1b eu-west-1c region
+#    filters:
+#     - State.Name: running
+#     - "tag.region": e
+#       action:
+#        - stop
+#
+## second policy 
+#
+#---
+## Third policy
+#
+#---
+#policies:
+#  - name: ec2_instance
+#    resource: ec2
+#    comment: |
+#      To stop all Ec2 running instance with no logging.
+#    mode:
+#      -  type: cloudwatch
+#    filters:
+#      - logging: false
+#    actions:
+#     - stop  
+
+
+# To check the security group 
+# fourth-policy
+
+#--- 
+#policies:
+#  - name: check-security_group
+#    resource: security-group
+#    
+#    filter: 
+#      - type: ingress
+#        Ports: 'all'
+#        access: 'any'
+#    action:
+#      - type: notify
+
+# Fifth policy 
+# To detect any stopped, terminated and running EC2 instance
+
+--- 
+policies:
+  - name: stopped-ec2-instance
+    resource: ec2
+    description: |
+      This policy will list any stopped ec2 instance
+    filters: 
+      - "State.Name": stopped  
+    actions:
+      - start
+  
+  - name: terminated-ec2-instance
+    resource: ec2
+    description: |
+      This part will tell about all the terminated instance.
+    filters: 
+      - "State.Name": terminated
+    actions:
+      - notify
+
+  - name: running-ec2-instance
+    resource: ec2
+    description: |
+      this part will tell about all the running instance.
+    filters:
+      - "State.Name": running
+    actions:
+      - notify
+       value: 
+#       - ''
+#       - ''
+#      action:
+#        - stop
+#
+## Third policy
+#
+#---
+#policies:
+#  - name: ec2_instance
+#    resource: ec2
+#    comment: |
+#      To stop all Ec2 running instance with no logging.
+#    mode:
+#      -  type: cloudwatch
+#    filters:
+#      - logging: false
+#    actions:
+#     - stop  
+
+
+# To check the security group 
+# fourth-policy
+
+#--- 
+#policies:
+#  - name: check-security_group
+#    resource: security-group
+#    
+#    filter: 
+#      - type: ingress
+#        Ports: 'all'
+#        access: 'any'
+#    action:
+#      - type: notify
+
+# Fifth policy 
+# To detect any stopped, terminated and running EC2 instance
+
+--- 
+policies:
+  - name: stopped-ec2-instance
+    resource: ec2
+    description: |
+      This policy will list any stopped ec2 instance
+    filters: 
+      - "State.Name": stopped  
+    actions:
+      - start
+  
+  - name: terminated-ec2-instance
+    resource: ec2
+    description: |
+      This part will tell about all the terminated instance.
+    filters: 
+      - "State.Name": terminated
+    actions:
+      - notify
+
+  - name: running-ec2-instance
+    resource: ec2
+    description: |
+      this part will tell about all the running instance.
+    filters:
+      - "State.Name": Running
+    actions:
+      - notify

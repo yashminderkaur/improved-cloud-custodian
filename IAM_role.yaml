@@ -1,0 +1,15 @@
+## Role-based Policy
+
+---
+policies:
+  - name: role-attached-policy
+    resource: iam-role
+    comment: |
+      Check that every role is attached with a policy.
+    filters:
+      - type: has-inline-policy
+        value: false
+    actions:
+      - type: tag
+        tag: inline
+        value: absent

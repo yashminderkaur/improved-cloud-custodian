@@ -1,0 +1,23 @@
+# Third policy
+
+#---
+#policies:
+#  - name: ec2_instance
+#    resource: ec2
+#    region: 'eu-west-1'
+#    comment: |
+#      To stop all Ec2 running instance with no logging.
+#    filters:
+#      - logging: false
+#    actions:
+#    -  
+
+
+policies:
+  - name: ec2-auto-tag-user
+    resource: ec2
+    filters:
+      - "tag.CreatorName": absent
+    actions:
+      - type: auto-tag-user
+        tag: CreatorName

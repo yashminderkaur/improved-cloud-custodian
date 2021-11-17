@@ -1,0 +1,10 @@
+# plicy to check elb encryption
+
+policies:
+  - name: turn-off-elb-logs
+    resource: elb
+    filters:
+      - type: not-logging
+        bucket: mytestbucketsss
+    actions:
+      - type: enable-s3-logging
